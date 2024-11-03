@@ -35,8 +35,6 @@ system.reset = function()
         phyBearID = "-1",
         controlCenterId = "-1",
         mode = "hms",
-        power_on = "front", -- 开机信号
-        fire = "back", -- 开火信号
         cannonOffset = {
             x = 0,
             y = 3,
@@ -81,8 +79,8 @@ if not gear then
 else
     gear.setTargetSpeed(0)
     for i = 1, 2, 1 do
-        redstone.setOutput(properties.power_on, false)
-        redstone.setOutput(properties.power_on, true)
+        cannon.disassemble()
+        cannon.assemble()
     end
     sleep(0.5)
 end
@@ -925,8 +923,6 @@ local runTerm = function()
     fieldTb.forecastMov.len = 5
     fieldTb.forecastRot.len = 5
     local selectBoxTb = {
-        power_on = newSelectBox(properties, "power_on", 2, 12, 3, "top", "left", "right", "front", "back"),
-        fire = newSelectBox(properties, "fire", 2, 8, 4, "top", "left", "right", "front", "back"),
         face = newSelectBox(properties, "face", 2, 8, 5, "south", "west", "north", "east"),
         idleFace = newSelectBox(properties, "idleFace", 1, 14, 6, "south", "west", "north", "east"),
         lock_yaw_face = newSelectBox(properties, "lock_yaw_face", 2, 27, 12, "south", "west", "north", "east"),
@@ -961,11 +957,6 @@ local runTerm = function()
                 term.write("BarrelLength")
                 term.setCursorPos(36, 2)
                 term.write("Yaw_Pc_ID")
-
-                term.setCursorPos(2, 3)
-                term.write("POWER_ON: ")
-                term.setCursorPos(2, 4)
-                term.write("FIRE: ")
 
                 term.setCursorPos(2, 7)
                 term.write("CannonOffset: x=    y=    z=")
@@ -1072,9 +1063,7 @@ end
 local checkFire = function()
     while true do
         if fire and ct > 0 then
-            redstone.setOutput(properties.fire, controlCenter.fire)
-        else
-            redstone.setOutput(properties.fire, false)
+            cannon.fire()
         end
         sleep(0.05)
     end
