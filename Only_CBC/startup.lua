@@ -368,7 +368,7 @@ end
 ------------------------------------------
 
 local finalYaw, finalPit = 0, 0
-local cannonPitch, cannonYaw = 0
+local cannonPitch, cannonYaw = 0, 0
 local fire = false
 local runCt = function()
     while true do
