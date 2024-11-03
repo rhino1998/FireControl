@@ -85,8 +85,8 @@ if not gear then
 else
     gear.setTargetSpeed(0)
     for i = 1, 2, 1 do
-        redstone.setOutput(properties.power_on, false)
-        redstone.setOutput(properties.power_on, true)
+        cannon.disassemble()
+        cannon.assemble()
     end
     sleep(0.5)
 end
