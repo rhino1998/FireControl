@@ -75,7 +75,7 @@ system.init()
 local gear = peripheral.find("Create_RotationSpeedController")
 
 local cannons = {}
-for periph in peripheral.getNames() do
+for _, periph in pairs(peripheral.getNames()) do
     if peripheral.getType(periph) == "createbigcannons:cbc_cannon_mount" then
         cannons.insert(peripheral.wrap(periph))
     end
@@ -91,7 +91,7 @@ if not gear then
 else
     gear.setTargetSpeed(0)
     for i = 1, 2, 1 do
-        for cannon in cannons do
+        for _, cannon in pairs(cannons) do
             cannon.disassemble()
             cannon.assemble()
         end
@@ -1071,7 +1071,7 @@ end
 local checkFire = function()
     while true do
         if fire and ct > 0 then
-            for cannon in cannons do
+            for _, cannon in pairs(cannons) do
                 cannon.fire()
             end
         end
