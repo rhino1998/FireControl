@@ -74,12 +74,7 @@ system.init()
 
 local gear = peripheral.find("Create_RotationSpeedController")
 
-local cannons = {}
-for _, periph in pairs(peripheral.getNames()) do
-    if peripheral.getType(periph) == "createbigcannons:cbc_cannon_mount" then
-        cannons.insert(peripheral.wrap(periph))
-    end
-end
+local cannons = {peripheral.find("cbc_cannon_mount")}
 
 if #cannons == 0 then
     printError("Need peripheral: cbc_cannon_mount")
