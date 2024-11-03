@@ -74,21 +74,21 @@ system.init()
 
 local gear = peripheral.find("Create_RotationSpeedController")
 
+local cannon = peripheral.find("cbc_cannon_mount")
+if not cannon then
+    printError("Need peripheral: cbc_cannon_mount")
+    return
+end
+
 if not gear then
     printError("Need SpeedController")
 else
     gear.setTargetSpeed(0)
     for i = 1, 2, 1 do
-        cannon.disassemble()
-        cannon.assemble()
+        redstone.setOutput(properties.power_on, false)
+        redstone.setOutput(properties.power_on, true)
     end
     sleep(0.5)
-end
-
-local cannon = peripheral.find("cbc_cannon_mount")
-if not cannon then
-    printError("Need peripheral: cbc_cannon_mount")
-    return
 end
 
 -----------function------------
