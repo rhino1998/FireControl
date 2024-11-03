@@ -69,11 +69,12 @@ local yawGear = gears[1]
 local pitchGear = gears[2]
 
 local cannons = {peripheral.find("cbc_cannon_mount")}
-
 if #cannons == 0 then
     printError("Need peripheral: cbc_cannon_mount")
     return
 end
+
+local cannon = {}
 
 if not yawGear or not pitchGear then
     printError("Need SpeedController")
