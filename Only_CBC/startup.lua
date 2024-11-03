@@ -529,7 +529,7 @@ local runCt = function()
 
         sendToGear(yawSpeed, pitchSpeed)
 
-        local cannonPitch, cannonYaw = cannons[1].getPitch(), cannon[1].getYaw()
+        local cannonPitch, cannonYaw = cannons[1].getPitch(), cannons[1].getYaw()
         cannonUtil:setPreAtt()
         if yawSpeed == 0 and pitchSpeed == 0 then
             local cosP = math.cos(math.rad(cannonPitch))
