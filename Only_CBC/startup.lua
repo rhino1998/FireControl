@@ -34,8 +34,6 @@ system.reset = function()
         cannonName = "CBC",
         switchGear = false,
         controlCenterId = "-1",
-        power_on = "back", --开机信号
-        fire = "top",      --开火信号
         cannonOffset = { x = 0, y = 3, z = 0 },
         minPitchAngle = -45,
         face = "west",
@@ -70,22 +68,22 @@ local gears = { peripheral.find("Create_RotationSpeedController") }
 local yawGear = gears[1]
 local pitchGear = gears[2]
 
+local cannon = peripheral.find("cbc_cannon_mount")
+if not cannon then
+    printError("Need peripheral: cbc_cannon_mount")
+    return
+end
+
 if not yawGear or not pitchGear then
     printError("Need SpeedController")
 else
     yawGear.setTargetSpeed(0)
     pitchGear.setTargetSpeed(0)
     for i = 1, 2, 1 do
-        redstone.setOutput(properties.power_on, false)
-        redstone.setOutput(properties.power_on, true)
+        cannon.disassemble()
+        cannon.assemble()
     end
     sleep(0.25)
-end
-
-local cannon = peripheral.find("cbc_cannon_mount")
-if not cannon then
-    printError("Need peripheral: cbc_cannon_mount")
-    return
 end
 
 -----------function------------
@@ -795,8 +793,6 @@ local runTerm = function()
     fieldTb.drag.len = 6
     fieldTb.forecast.len = 5
     local selectBoxTb = {
-        power_on = newSelectBox(properties, "power_on", 2, 12, 3, "top", "left", "right", "front", "back"),
-        fire = newSelectBox(properties, "fire", 2, 8, 4, "top", "left", "right", "front", "back"),
         face = newSelectBox(properties, "face", 2, 8, 5, "south", "west", "north", "east"),
         lock_yaw_face = newSelectBox(properties, "lock_yaw_face", 2, 27, 12, "south", "west", "north", "east"),
         InvertYaw = newSelectBox(properties, "InvertYaw", 1, 41, 13, false, true),
@@ -832,11 +828,6 @@ local runTerm = function()
                 term.write("BarrelLength")
                 term.setCursorPos(36, 2)
                 term.write("forecast:")
-
-                term.setCursorPos(2, 3)
-                term.write("POWER_ON: ")
-                term.setCursorPos(2, 4)
-                term.write("FIRE: ")
 
                 term.setCursorPos(2, 6)
                 term.write("CannonOffset: x=    y=    z=")
@@ -937,13 +928,7 @@ end
 local checkFire = function()
     while true do
         if fire and ct > 0 then
-            if not redstone.getOutput(properties.fire) then
-                redstone.setOutput(properties.fire, true)
-            end
-        else
-            if redstone.getOutput(properties.fire) then
-                redstone.setOutput(properties.fire, false)
-            end
+            cannon.fire()
         end
         sleep(0.05)
     end
