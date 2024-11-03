@@ -931,7 +931,9 @@ end
 local checkFire = function()
     while true do
         if fire and ct > 0 then
-            cannon.fire()
+            for _, cannon in pairs(cannons) do
+                cannon.fire()
+            end
         end
         sleep(0.05)
     end
