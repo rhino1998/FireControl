@@ -81,6 +81,7 @@ else
     yawGear.setTargetSpeed(0)
     pitchGear.setTargetSpeed(0)
     for _, cannon in pairs(cannons) do
+        cannon.disassemble()
         cannon.assemble()
     end
     sleep(0.25)
@@ -368,7 +369,8 @@ end
 ------------------------------------------
 
 local finalYaw, finalPit = 0, 0
-local cannonPitch, cannonYaw = 0, 0
+cannon.yaw = 0
+cannon.pitch = 0
 local fire = false
 local runCt = function()
     while true do
@@ -483,9 +485,9 @@ local runCt = function()
             end
 
             if properties.InvertYaw then
-                tmpYaw = resetAngelRange(cannonYaw - tmpYaw)
+                tmpYaw = resetAngelRange(cannon.yaw - tmpYaw)
             else
-                tmpYaw = resetAngelRange(tmpYaw - cannonYaw)
+                tmpYaw = resetAngelRange(tmpYaw - cannon.yaw)
             end
 
             if math.abs(tmpYaw) > 10 then
@@ -499,7 +501,7 @@ local runCt = function()
             ------self(pitch)-------
             tgPitch = math.deg(math.asin(rot.y / math.sqrt(rot.x ^ 2 + rot.y ^ 2 + rot.z ^ 2)))
         else
-            local tmpYaw = properties.InvertYaw and cannonYaw or -cannonYaw
+            local tmpYaw = properties.InvertYaw and cannon.yaw or -cannon.yaw
             tmpYaw = math.abs(tmpYaw) > 0.01875 and tmpYaw or 0
             yawSpeed = math.floor(tmpYaw * ANGLE_TO_SPEED / 2 + 0.5)
             yawSpeed = math.abs(yawSpeed) < MAX_ROTATE_SPEED and yawSpeed or copysign(MAX_ROTATE_SPEED, yawSpeed)
@@ -513,9 +515,9 @@ local runCt = function()
         end
 
         if properties.InvertPitch then
-            tgPitch = resetAngelRange(tgPitch - cannonPitch)
+            tgPitch = resetAngelRange(tgPitch - cannon.pitch)
         else
-            tgPitch = resetAngelRange(cannonPitch - tgPitch)
+            tgPitch = resetAngelRange(cannon.pitch - tgPitch)
         end
 
         if math.abs(tgPitch) > 5 then
@@ -537,19 +539,19 @@ local runCt = function()
             local zp = math.cos(math.rad(cannonYaw)) * cosP
             local yp = math.sin(math.rad(cannonPitch))
             local newP = RotateVectorByQuat(quatList[properties.cannonFace], { x = xp, y = yp, z = zp })
-            cannonYaw = math.deg(math.atan2(newP.z, newP.x))
-            cannonPitch = math.deg(math.asin(yp))
+            cannon.yaw = math.deg(math.atan2(newP.z, newP.x))
+            cannon.pitch = math.deg(math.asin(yp))
         else
             finalYaw = math.floor((yawSpeed / ANGLE_TO_SPEED) * 1000000 + 0.5) / 1000000
             if properties.InvertYaw then
                 finalYaw = -finalYaw
             end
-            cannonYaw = resetAngelRange(cannonYaw + finalYaw)
+            cannon.yaw = resetAngelRange(cannon.yaw + finalYaw)
             finalPit = -math.floor((pitchSpeed / ANGLE_TO_SPEED) * 1000000 + 0.5) / 1000000
             if properties.InvertPitch then
                 finalPit = -finalPit
             end
-            cannonPitch = resetAngelRange(cannonPitch + finalPit)
+            cannon.pitch = resetAngelRange(cannon.pitch + finalPit)
         end
     end
 end
@@ -926,10 +928,8 @@ end
 
 local checkFire = function()
     while true do
-        if fire and ct > 0 then
-            for _, cannon in pairs(cannons) do
-                cannon.fire()
-            end
+        for _, cannon in pairs(cannons) do
+            cannon.fire()
         end
         sleep(0.05)
     end
