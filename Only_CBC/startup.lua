@@ -80,11 +80,8 @@ if not yawGear or not pitchGear then
 else
     yawGear.setTargetSpeed(0)
     pitchGear.setTargetSpeed(0)
-    for i = 1, 2, 1 do
-        for _, cannon in pairs(cannons) do
-            cannon.disassemble()
-            cannon.assemble()
-        end
+    for _, cannon in pairs(cannons) do
+        cannon.assemble()
     end
     sleep(0.25)
 end
